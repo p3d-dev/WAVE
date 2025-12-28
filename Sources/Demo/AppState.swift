@@ -9,11 +9,9 @@ public typealias AppStateHolder = StateHolder<ExamplePersistent, ExampleTransien
 /// Transient state for example app, containing UI measurements
 public struct ExampleTransient: Equatable, Sendable {
     public var eventLogging: EventLoggingState
-    public var colorThemeSelectorColumns: Int
 
     public init() {
         eventLogging = EventLoggingState()
-        colorThemeSelectorColumns = 3
     }
 }
 

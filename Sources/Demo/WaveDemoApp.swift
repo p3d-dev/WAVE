@@ -44,8 +44,7 @@ struct AppContentView: View {
 
         let stateManager = await AppUIStateManager(
             defaultState: { @Sendable in
-                var persistent = ExamplePersistent()
-                return AppStateAlias(t: ExampleTransient(), p: persistent)
+                return AppStateAlias(t: ExampleTransient(), p: ExamplePersistent())
             },
             dispatchFilter: recorderFilter
         )

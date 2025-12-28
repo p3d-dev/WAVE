@@ -266,13 +266,9 @@ struct MySliderView: View {
     @ObservedObject var stateObject: MyStateObject
     @Environment(\.appDispatch) private var appDispatch: AppDispatch
 
-    private var sliderBinding: Binding<Float> {
-        makeBinding(
-            get: { Float(stateObject.counter) },
-            send: { newValue in
-                appDispatch(MyEvent.setCounter(Int(newValue)))
-            }
-        )
+    private var sliderBinding: Binding<Float> { makeBinding(
+        get: { Float(stateObject.counter) },
+        send: { appDispatch(MyEvent.setCounter(Int($0))) })
     }
 
     var body: some View {

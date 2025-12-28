@@ -9,16 +9,9 @@ struct CounterSliderView: View {
     @ObservedObject var stateObject: ExampleStateObject
     @Environment(\.appDispatch) private var appDispatch: AppDispatch
 
-    private var x: Binding<Float> {
-        .init(
-            get: {
-                Float(stateObject.counter)
-            },
-            set: { newValue in
-                if Int(newValue) == stateObject.counter { return }
-                appDispatch(ExampleEvent.setCounter(Int(newValue)))
-            }
-        )
+    private var x: Binding<Float> { makeBinding(
+        get: { Float(stateObject.counter) },
+        send: { appDispatch(ExampleEvent.setCounter(Int($0))) })
     }
 
     var body: some View {
