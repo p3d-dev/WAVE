@@ -254,6 +254,27 @@ public struct MyView: View {
 }
 ```
 
+### Using the Object Factory
+
+Use the object factory to create StateObjects that automatically sync with app state. Access the factory via `@Environment(\.objectFactory)` and call `makeStateObject()` to get properly initialized StateObjects.
+
+```swift
+import SwiftUI
+import WaveViews
+
+public struct MyLayoutView: View {
+    @Environment(\.objectFactory) private var objectFactory
+
+    public var body: some View {
+        if let stateObject: MyStateObject = objectFactory?.makeStateObject() {
+            MyView(stateObject: stateObject)
+        } else {
+            Text("Loading...")
+        }
+    }
+}
+```
+
 ### Using Bindings
 
 Use `makeBinding` to create SwiftUI bindings that dispatch events on changes. This connects UI controls to state reactively.
