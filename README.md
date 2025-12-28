@@ -167,12 +167,13 @@ struct MyReducer: EventReducer {
 
 ### State Objects and Forwarders
 
+The definition of MyStateObject belongs to a view definition, because a view needs it. The Listener belongs to app/app state code, which forwards from state (single truth) to stateobject
+
 Use `@StateForwarder` macro to automatically sync app state with SwiftUI `ObservableObject`s. Define mappings from app state key paths to object properties.
 
+Define the StateObject in your view files:
+
 ```swift
-import WaveState
-import WaveMacros
-import WaveViews
 import SwiftUI
 
 public final class MyStateObject: ObservableObject {
@@ -184,6 +185,13 @@ public final class MyStateObject: ObservableObject {
         self.mode = mode
     }
 }
+```
+
+Define the Forwarder in your app state code:
+
+```swift
+import WaveState
+import WaveMacros
 
 @StateForwarder(
     for: MyStateObject.self,
@@ -193,6 +201,25 @@ public final class MyStateObject: ObservableObject {
     ]
 )
 public final class MyForwarder: StateListener {}
+```
+
+Use the StateObject in a view:
+
+```swift
+import SwiftUI
+import WaveViews
+
+public struct MyView: View {
+    @StateObject var stateObject: MyStateObject
+    @Environment(\.appDispatch) private var appDispatch: AppDispatch
+
+    public var body: some View {
+        Text("Counter: \(stateObject.counter)")
+        Button("Increment") {
+            appDispatch(MyEvent.incrementCounter)
+        }
+    }
+}
 ```
 
 ### Building Views
