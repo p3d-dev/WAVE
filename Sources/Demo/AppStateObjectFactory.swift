@@ -20,6 +20,9 @@ final class AppStateObjectFactory: StateObjectFactory {
         if T.self == ExampleStateObject.self {
             return ExampleForwarder(stateManager: stateManager)
         }
+        if T.self == EventStateObject.self {
+            return EventForwarder(stateManager: stateManager)
+        }
         return nil
     }
 
