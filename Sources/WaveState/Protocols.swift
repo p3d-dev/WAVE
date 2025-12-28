@@ -31,16 +31,6 @@ public struct ResetEvent: AppEvent {
     public var isUIEvent: Bool { true }
 }
 
-/// Events related to event recording and replay for debugging.
-public enum EventRecorderEvent: AppEvent {
-    /// Trigger replay of recorded events.
-    case replay
-
-    /// Recording events should not be persisted.
-    public var persist: Bool { false }
-    /// Recording events are not UI events.
-    public var isUIEvent: Bool { false }
-}
 
 // MARK: - Reducer Protocols
 

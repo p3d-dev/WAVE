@@ -38,15 +38,10 @@ struct AppContentView: View {
     /// Initializes and configures the state manager with reducers, effects, and default state.
     /// This function contains all the setup logic previously in onAppear for better organization.
     func initializeStateManager() async -> AppUIStateManager {
-        let recorderFilter: @Sendable (any AppEvent) async -> Bool = { event in
-            await EventRecorder.shared.dispatchFilter(event: event)
-        }
-
         let stateManager = await AppUIStateManager(
             defaultState: { @Sendable in
                 return AppStateAlias(t: ExampleTransient(), p: ExamplePersistent())
-            },
-            dispatchFilter: recorderFilter
+            }
         )
 
         // PITFALL: Missing event reducer registration - Ensure all reducers are added here.
@@ -58,14 +53,14 @@ struct AppContentView: View {
 
         await stateManager.addReducer(
             AnyReducer<AppStateAlias>(
-                EventLoggingAppReducer(keyPath: \.t.eventLogging)))
+                EventLoggingAppReducer<AppStateAlias>(keyPath: \.t.eventLogging)))
 
         // PITFALL: Forgetting to set up effects processor can lead to missing side effects
         // (e.g., analytics, network calls, persistence). Always call setEffects even if empty.
         let effectsProcessor = EffectsProcessor(stateManager: stateManager)
 
         await stateManager.setEffects { [effectsProcessor] event, state in
-            await effectsProcessor.process(event: event, state: state.p)
+            await effectsProcessor.process(event: event, state: state)
         }
 
         return stateManager

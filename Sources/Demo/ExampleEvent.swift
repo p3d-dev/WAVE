@@ -13,14 +13,13 @@ public enum ExampleEvent: AppEvent, Codable, Equatable {
     case setCounter(Int)
     case loaded(String)
     case loadError
-    case replay
 
     public var persist: Bool {
         switch self {
             case .load, .loaded, .loadError, .reset, .incrementCounter, .decrementCounter,
                 .setCounter:
                 return true
-            case .onAppear, .replay:
+            case .onAppear:
                 return false
         }
     }
@@ -29,7 +28,7 @@ public enum ExampleEvent: AppEvent, Codable, Equatable {
         switch self {
             case .onAppear, .load, .reset, .incrementCounter, .decrementCounter, .setCounter:
                 return true
-            case .loaded, .loadError, .replay:
+            case .loaded, .loadError:
                 return false
         }
     }

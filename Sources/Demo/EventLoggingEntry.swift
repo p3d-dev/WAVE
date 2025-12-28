@@ -1,4 +1,5 @@
 import SwiftUI
+import WaveState
 
 /// Immutable entry describing a dispatched event for debugging purposes.
 public struct EventLoggingEntry: Equatable, Sendable, Identifiable {
@@ -8,6 +9,8 @@ public struct EventLoggingEntry: Equatable, Sendable, Identifiable {
 
     /// Timestamp captured from `DispatchTime.now().uptimeNanoseconds`.
     public let timestamp: UInt64
+    /// The original event.
+    public let event: any AppEvent
     /// Type name of the dispatched event.
     public let typeName: String
     /// Textual representation for quick inspection.
@@ -17,10 +20,19 @@ public struct EventLoggingEntry: Equatable, Sendable, Identifiable {
     /// Indicates whether the event triggered persistence.
     public let persist: Bool
 
+    public static func == (lhs: EventLoggingEntry, rhs: EventLoggingEntry) -> Bool {
+        lhs.timestamp == rhs.timestamp &&
+        lhs.typeName == rhs.typeName &&
+        lhs.description == rhs.description &&
+        lhs.isUIEvent == rhs.isUIEvent &&
+        lhs.persist == rhs.persist
+    }
+
     /// Creates an entry based on the provided event.
-    /// - Parameter event: The event being logged.
+    /// - Parameter queuedEvent: The queued event being logged.
     public init(queuedEvent: QueuedEvent) {
         timestamp = queuedEvent.timestamp
+        event = queuedEvent.event
         typeName = String(reflecting: type(of: queuedEvent.event))
         description = String(describing: queuedEvent.event)
         isUIEvent = queuedEvent.event.isUIEvent
@@ -30,12 +42,14 @@ public struct EventLoggingEntry: Equatable, Sendable, Identifiable {
     /// Creates a custom entry, primarily for testing or tooling.
     public init(
         timestamp: UInt64,
+        event: any AppEvent,
         typeName: String,
         description: String,
         isUIEvent: Bool,
         persist: Bool
     ) {
         self.timestamp = timestamp
+        self.event = event
         self.typeName = typeName
         self.description = description
         self.isUIEvent = isUIEvent

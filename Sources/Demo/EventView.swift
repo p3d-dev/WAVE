@@ -18,6 +18,7 @@ public final class EventStateObject: ObservableObject {
 /// View for displaying the list of logged events.
 public struct EventView: View {
     @StateObject var stateObject: EventStateObject
+    @Environment(\.appDispatch) private var appDispatch: AppDispatch
 
     public init(stateObject: EventStateObject) {
         self._stateObject = StateObject(wrappedValue: stateObject)
@@ -25,9 +26,19 @@ public struct EventView: View {
 
     public var body: some View {
         VStack(alignment: .leading) {
-            Text("Event Log")
-                .font(.headline)
-                .padding(.bottom, 8)
+            HStack {
+                Text("Event Log (\(stateObject.events.count))")
+                    .font(.headline)
+                Spacer()
+                  Button(action: {
+                      appDispatch(EventLoggingEvent.replay)
+                  }) {
+                    Image(systemName: "arrow.clockwise")
+                        .foregroundColor(.blue)
+                }
+                .buttonStyle(.borderless)
+            }
+            .padding(.bottom, 8)
 
             ScrollViewReader { proxy in
                 ScrollView {
@@ -71,7 +82,6 @@ public struct EventView: View {
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.white)
         .border(Color.gray.opacity(0.2))
     }
 }

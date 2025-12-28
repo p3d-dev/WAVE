@@ -75,5 +75,9 @@ let package = Package(
             dependencies: ["WaveState", "WaveMacros"],
             path: "Sources/Demo"
         ),
+        .testTarget(
+            name: "DemoTests",
+            dependencies: ["Demo"]
+        ),
     ]
 )

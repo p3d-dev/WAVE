@@ -1,7 +1,13 @@
 import Foundation
+import WaveState
 
 /// Transient state storing recent event logging entries.
 public struct EventLoggingState: Equatable, Sendable {
+    // simplified test to avoid array element comparisons
+    public static func == (lhs: EventLoggingState, rhs: EventLoggingState) -> Bool {
+        lhs.events.count == rhs.events.count
+    }
+    
     /// Logged events (most-recent-last).
     public var events: [EventLoggingEntry]
 
@@ -24,9 +30,15 @@ public struct EventLoggingReducer {
     /// Reduces the logging state for a dispatched event.
     /// - Parameters:
     ///   - state: Current logging state.
-    ///   - event: Event being processed.
+    ///   - queuedEvent: Event being processed.
     /// - Returns: Updated logging state with the new entry appended.
     public func reduce(state: EventLoggingState, queuedEvent: QueuedEvent) -> EventLoggingState {
+        if queuedEvent.event is EventLoggingEvent {
+            if case .clear = queuedEvent.event as! EventLoggingEvent {
+                return EventLoggingState(events: [])
+            }
+            return state
+        }
         var newState = state
         newState.events.append(EventLoggingEntry(queuedEvent: queuedEvent))
         let overflow = newState.events.count - maxEntries

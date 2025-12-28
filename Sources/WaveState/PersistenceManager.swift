@@ -92,15 +92,10 @@ public final class PersistenceManager<State: PersistentState>: PersistenceManage
         if lastSavedState == state || pendingState == state {
             return
         }
-        do {
-            let data = try encode(state)
+        if let data = try? encode(state) {
             UserDefaults.standard.set(data, forKey: persistenceKey)
             lastSavedState = state
             pendingState = nil
-
-        }
-        catch {
-
         }
     }
 
