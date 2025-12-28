@@ -7,7 +7,7 @@ import WaveViews
 @StateForwarder(
     for: EventStateObject.self,
     mapping: [
-        (\AppStateAlias.t.eventLogging.events, \EventStateObject.events),
+        (\AppStateAlias.t.eventLogging.events, \EventStateObject.events)
     ]
 )
 public final class EventForwarder: StateListener {}

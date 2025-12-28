@@ -23,10 +23,10 @@ struct ExampleReducer: EventReducer {
                     newState.p.exampleState.mode = .idle
                 case .incrementCounter:
                     newState.p.exampleState.counter += 1
-                 case .decrementCounter:
-                     newState.p.exampleState.counter -= 1
-                 case .setCounter(let counter):
-                     newState.p.exampleState.counter = counter
+                case .decrementCounter:
+                    newState.p.exampleState.counter -= 1
+                case .setCounter(let counter):
+                    newState.p.exampleState.counter = counter
             }
         }
         return newState

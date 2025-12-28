@@ -290,32 +290,37 @@ import SwiftUI
 struct MyApp: App {
     @State var stateManager: MyAppUIStateManager?
 
+    func initializeStateManager() async -> MyAppUIStateManager {
+        let stateManager = await MyAppUIStateManager(
+            defaultState: { @Sendable in
+                MyAppState(t: MyTransient(), p: MyPersistent())
+            }
+        )
+        await stateManager.addReducer(
+            AnyReducer<MyAppState>(MyReducer())
+        )
+        return stateManager
+    }
+
     var body: some Scene {
         WindowGroup {
-            if let stateManager {
-                MyView(stateObject: MyStateObject())
-                    .environment(
-                        \.appDispatch,
-                        { @Sendable event in stateManager.dispatch(event) }
-                    )
-                    .environment(
-                        \.objectFactory,
-                        MyStateObjectFactory(stateManager: stateManager)
-                    )
-            } else {
-                Text("Loading...")
-                    .onAppear {
-                        Task {
-                            stateManager = await MyAppUIStateManager(
-                                defaultState: { @Sendable in
-                                    MyAppState(t: MyTransient(), p: MyPersistent())
-                                }
-                            )
-                            await stateManager?.addReducer(
-                                AnyReducer<MyAppState>(MyReducer())
-                            )
-                        }
-                    }
+            Group {
+                if let stateManager {
+                    MyView(stateObject: MyStateObject())
+                        .environment(
+                            \.appDispatch,
+                            { @Sendable event in stateManager.dispatch(event) }
+                        )
+                        .environment(
+                            \.objectFactory,
+                            MyStateObjectFactory(stateManager: stateManager)
+                        )
+                }
+            }
+            .onAppear {
+                Task {
+                    stateManager = await initializeStateManager()
+                }
             }
         }
     }

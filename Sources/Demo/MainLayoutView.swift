@@ -18,7 +18,10 @@ struct MainLayoutView: View {
         // PITFALL: Missing listener registrations - Always use objectFactory.makeStateObject() to create StateObjects.
         // This ensures the StateObject is registered as a listener and stays in sync with app state.
         // This pattern allows dependency injection and proper lifecycle management
-        if let objectFactory, let es: ExampleStateObject = objectFactory.makeStateObject(), let ev: EventStateObject = objectFactory.makeStateObject() {
+        if let objectFactory,
+            let es: ExampleStateObject = objectFactory.makeStateObject(),
+            let ev: EventStateObject = objectFactory.makeStateObject()
+        {
             VStack(spacing: 0) {
                 HStack(spacing: 0) {
                     // Pass the StateObject created by the factory

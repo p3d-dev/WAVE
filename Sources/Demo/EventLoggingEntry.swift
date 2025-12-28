@@ -21,11 +21,11 @@ public struct EventLoggingEntry: Equatable, Sendable, Identifiable {
     public let persist: Bool
 
     public static func == (lhs: EventLoggingEntry, rhs: EventLoggingEntry) -> Bool {
-        lhs.timestamp == rhs.timestamp &&
-        lhs.typeName == rhs.typeName &&
-        lhs.description == rhs.description &&
-        lhs.isUIEvent == rhs.isUIEvent &&
-        lhs.persist == rhs.persist
+        lhs.timestamp == rhs.timestamp
+            && lhs.typeName == rhs.typeName
+            && lhs.description == rhs.description
+            && lhs.isUIEvent == rhs.isUIEvent
+            && lhs.persist == rhs.persist
     }
 
     /// Creates an entry based on the provided event.

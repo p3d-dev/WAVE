@@ -1,6 +1,6 @@
 import SwiftUI
-import WaveViews
 import WaveState
+import WaveViews
 
 /// Replace 'ExampleMode' with your feature's state modes (e.g., idle, loading, success, error).
 public enum ExampleMode: Equatable, Sendable, Codable {

@@ -31,7 +31,6 @@ public struct ResetEvent: AppEvent {
     public var isUIEvent: Bool { true }
 }
 
-
 // MARK: - Reducer Protocols
 
 /// Protocol for pure functions that reduce state based on queued events.

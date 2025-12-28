@@ -7,7 +7,6 @@ public struct EventLoggingState: Equatable, Sendable {
     public static func == (lhs: EventLoggingState, rhs: EventLoggingState) -> Bool {
         lhs.events.count == rhs.events.count
     }
-    
     /// Logged events (most-recent-last).
     public var events: [EventLoggingEntry]
 

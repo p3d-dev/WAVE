@@ -2,9 +2,9 @@
 // PITFALL: Missing event processor - Without an effects processor, side effects (network, analytics, etc.) won't run.
 // Handles side effects separately from UIStateManager for modularity and growth
 
+import Foundation
 import WaveState
 import WaveViews
-import Foundation
 
 /// Handles side effects for the example application, such as initializing layout on app appearance.
 /// Processes events and triggers additional actions like dispatching layout events.
@@ -31,8 +31,6 @@ class EffectsProcessor {
         // Future: Add more effects here, e.g., analytics, network calls
     }
 
-
-
     private func handleReplay(state: AppStateAlias) async {
         guard let stateManager = self.stateManager else { return }
         let eventsToReplay = state.t.eventLogging.events.map { $0.event }
@@ -44,6 +42,4 @@ class EffectsProcessor {
             }
         }
     }
-
-
 }
