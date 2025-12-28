@@ -72,30 +72,29 @@ struct AppContentView: View {
     }
 
     var body: some View {
-        if let stateManager {
-            MainLayoutView(stateManager: stateManager)
-                // This provides a closure that views can use to dispatch events to the state manager
-                // Views access this via @Environment(\.appDispatch) and call it to trigger state changes
-                .environment(
-                    \.appDispatch,
-                    { @Sendable event in stateManager.dispatch(event) }
-                )
-                // PITFALL: Missing state object creation - Views must use @Environment(\.objectFactory) to create StateObjects.
-                // Never instantiate StateObjects directly; always use the factory for proper listener registration.
-                // This factory creates StateObjects and automatically sets up state forwarding
-                // Views access this via @Environment(\.objectFactory) to get properly initialized StateObjects
-                .environment(
-                    \.objectFactory,
-                    AppStateObjectFactory(stateManager: stateManager)
-                )
+        Group {
+            if let stateManager {
+                MainLayoutView(stateManager: stateManager)
+                    // This provides a closure that views can use to dispatch events to the state manager
+                    // Views access this via @Environment(\.appDispatch) and call it to trigger state changes
+                    .environment(
+                        \.appDispatch,
+                        { stateManager.dispatch($0) }
+                    )
+                    // PITFALL: Missing state object creation - Views must use @Environment(\.objectFactory) to create StateObjects.
+                    // Never instantiate StateObjects directly; always use the factory for proper listener registration.
+                    // This factory creates StateObjects and automatically sets up state forwarding
+                    // Views access this via @Environment(\.objectFactory) to get properly initialized StateObjects
+                    .environment(
+                        \.objectFactory,
+                        AppStateObjectFactory(stateManager: stateManager)
+                    )
+            }
         }
-        else {
-            Text("Loading...")
-                .onAppear {
-                    Task {
-                        stateManager = await initializeStateManager()
-                    }
-                }
+        .onAppear {
+            Task {
+                stateManager = await initializeStateManager()
+            }
         }
     }
 }
