@@ -104,11 +104,12 @@ public struct MyTransient: Equatable, Sendable {
 }
 ```
 
-Then, define your app state by combining them:
+Then, define your app state by combining them. **Note: These typealias names must be used exactly as shown, as they are hardcoded in the macros.**
 
 ```swift
-public typealias MyAppState = AppState<MyPersistent, MyTransient>
-public typealias MyAppUIStateManager = UIStateManager<MyPersistent, MyTransient>
+public typealias AppState = AppState<MyPersistent, MyTransient>
+public typealias AppStateHolder = StateHolder<MyPersistent, MyTransient>
+public typealias AppUIStateManager = UIStateManager<MyPersistent, MyTransient>
 ```
 
 ### Enabling Persistence
@@ -116,12 +117,15 @@ public typealias MyAppUIStateManager = UIStateManager<MyPersistent, MyTransient>
 To enable automatic persistence of your app's state across app launches, provide a `persistenceKey` when initializing the `UIStateManager`. This key is used to store and retrieve the persistent state from `UserDefaults`.
 
 ```swift
-let stateManager = await MyAppUIStateManager(
-    defaultState: { @Sendable in
-        MyAppState(t: MyTransient(), p: MyPersistent())
-    },
-    persistenceKey: "myAppState"  // Enables persistence with this key
-)
+        let stateManager = await AppUIStateManager(
+            defaultState: { @Sendable in
+                AppState(t: MyTransient(), p: MyPersistent())
+            },
+            persistenceKey: "myAppState"  // Enables persistence with this key
+        )
+        await stateManager.addReducer(
+            AnyReducer<AppState>(MyReducer())
+        )
 ```
 
 - **persistenceKey**: A unique string identifier for storing your app's persistent state. If provided, the state manager will automatically save and restore persistent state. If omitted, persistence is disabled and state resets on each app launch.
@@ -162,7 +166,7 @@ Implement a reducer as a pure function that transforms state based on events. Re
 import WaveState
 
 struct MyReducer: EventReducer {
-    func reduce(state: MyAppState, queuedEvent: QueuedEvent) -> MyAppState {
+    func reduce(state: AppState, queuedEvent: QueuedEvent) -> AppState {
         var newState = state
         let event = queuedEvent.event
         if let myEvent = event as? MyEvent {
@@ -211,8 +215,8 @@ import WaveMacros
 @StateForwarder(
     for: MyStateObject.self,
     mapping: [
-        (\MyAppState.p.counter, \MyStateObject.counter),
-        (\MyAppState.p.mode, \MyStateObject.mode),
+        (\AppState.p.counter, \MyStateObject.counter),
+        (\AppState.p.mode, \MyStateObject.mode),
     ]
 )
 public final class MyForwarder: StateListener {}
@@ -324,17 +328,17 @@ import SwiftUI
 
 @main
 struct MyApp: App {
-    @State var stateManager: MyAppUIStateManager?
+    @State var stateManager: AppUIStateManager?
 
-    func initializeStateManager() async -> MyAppUIStateManager {
-        let stateManager = await MyAppUIStateManager(
+    func initializeStateManager() async -> AppUIStateManager {
+        let stateManager = await AppUIStateManager(
             defaultState: { @Sendable in
-                MyAppState(t: MyTransient(), p: MyPersistent())
+                AppState(t: MyTransient(), p: MyPersistent())
             },
             persistenceKey: "myAppState"  // Optional: enables state persistence
         )
         await stateManager.addReducer(
-            AnyReducer<MyAppState>(MyReducer())
+            AnyReducer<AppState>(MyReducer())
         )
         return stateManager
     }
