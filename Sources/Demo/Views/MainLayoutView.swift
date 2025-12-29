@@ -5,16 +5,16 @@ import WaveViews
 /// This demonstrates how to compose different features in a single view.
 /// Replace 'MainLayoutView' with your app's main layout component.
 /// Shows pattern for using objectFactory to create StateObjects for features.
-struct MainLayoutView: View {
+public struct MainLayoutView: View {
     private let stateManager: AppUIStateManager
 
     @Environment(\.objectFactory) private var objectFactory
 
-    init(stateManager: AppUIStateManager) {
+    public init(stateManager: AppUIStateManager) {
         self.stateManager = stateManager
     }
 
-    var body: some View {
+    public var body: some View {
         // PITFALL: Missing listener registrations - Always use objectFactory.makeStateObject() to create StateObjects.
         // This ensures the StateObject is registered as a listener and stays in sync with app state.
         // This pattern allows dependency injection and proper lifecycle management

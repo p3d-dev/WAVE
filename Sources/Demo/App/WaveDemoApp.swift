@@ -1,4 +1,5 @@
 import SwiftUI
+import WaveDemo
 import WaveState
 import WaveViews
 

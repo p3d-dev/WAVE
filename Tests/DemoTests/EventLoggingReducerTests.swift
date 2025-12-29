@@ -2,7 +2,7 @@ import Testing
 import WaveState
 import WaveViews
 
-@testable import Demo
+@testable import WaveDemo
 
 private enum LoggingTestEvent: AppEvent, Equatable {
     case alpha

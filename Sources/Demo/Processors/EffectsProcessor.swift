@@ -9,15 +9,15 @@ import WaveViews
 /// Handles side effects for the example application, such as initializing layout on app appearance.
 /// Processes events and triggers additional actions like dispatching layout events.
 @MainActor
-class EffectsProcessor {
+public class EffectsProcessor {
     private weak var stateManager: AppUIStateManager?
 
-    init(stateManager: AppUIStateManager) {
+    public init(stateManager: AppUIStateManager) {
         self.stateManager = stateManager
     }
 
     // This is in the processing loop => return as fast as possible !
-    func process(event: any AppEvent, state: AppStateAlias) async {
+    public func process(event: any AppEvent, state: AppStateAlias) async {
         // Handle example events
         if event is ExampleEvent {
             // No side effects for example events currently

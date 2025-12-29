@@ -1,3 +1,4 @@
+import WaveDemo
 import WaveState
 import WaveViews
 

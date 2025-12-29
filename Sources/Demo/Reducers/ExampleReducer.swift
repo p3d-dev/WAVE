@@ -4,8 +4,10 @@ import WaveState
 /// They return new state instances without mutating the input.
 /// Replace 'ExampleReducer' with your feature's reducer name.
 /// Implement EventReducer protocol for integration with UIStateManager.
-struct ExampleReducer: EventReducer {
-    func reduce(state: AppStateAlias, queuedEvent: QueuedEvent) -> AppStateAlias {
+public struct ExampleReducer: EventReducer {
+    public init() {}
+
+    public func reduce(state: AppStateAlias, queuedEvent: QueuedEvent) -> AppStateAlias {
         var newState = state
         let event = queuedEvent.event
         if let exampleEvent = event as? ExampleEvent {
