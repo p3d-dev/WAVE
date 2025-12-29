@@ -8,9 +8,10 @@ import Foundation
 ///
 /// Design Decision: Generic over Persistent and Transient types for flexibility.
 /// Conforms to Equatable for state comparison and Sendable for concurrency safety.
-public struct AppState<Persistent: Codable & Equatable & Sendable, Transient: Equatable & Sendable>:
-    Equatable & Sendable
-{
+public struct AppState<
+    Persistent: Codable & Equatable & Sendable,
+    Transient: Equatable & Sendable
+>: Equatable & Sendable {
     /// Transient state that is not persisted.
     public var t: Transient
     /// Persistent state that is saved to disk.
@@ -30,8 +31,8 @@ public struct AppState<Persistent: Codable & Equatable & Sendable, Transient: Eq
 /// It holds the current state and provides access for reading and updating.
 /// State changes are propagated to listeners via the StateListener protocol.
 ///
-/// Design Decision: @unchecked Sendable because state access is protected by MainActor.
 /// Used by UIStateManager to provide observable state to SwiftUI views.
+/// Providing stateHolder to the forwarder avoids copying
 ///
 /// ## Usage
 /// ```swift
@@ -39,10 +40,11 @@ public struct AppState<Persistent: Codable & Equatable & Sendable, Transient: Eq
 /// holder.state = newState  // State updated, listeners notified separately
 /// ```
 public final class StateHolder<
-    Persistent: Codable & Equatable & Sendable, Transient: Equatable & Sendable
->: @unchecked Sendable {
+    Persistent: Codable & Equatable & Sendable,
+    Transient: Equatable & Sendable
+>: Sendable {
     /// The current application state.
-    public var state: AppState<Persistent, Transient>
+    public let state: AppState<Persistent, Transient>
 
     /// Initializes the state holder with an initial state.
     /// - Parameter state: The initial state value.

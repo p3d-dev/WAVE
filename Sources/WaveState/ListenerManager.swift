@@ -11,7 +11,6 @@ public final class ListenerManager<Persistent: PersistentState, Transient: Equat
     /// Adds a listener to be notified of state changes.
     /// - Parameter listener: The listener to add.
     public func addListener(_ listener: any StateListener) {
-
         listeners.append((UUID(), listener))
     }
 
@@ -25,7 +24,6 @@ public final class ListenerManager<Persistent: PersistentState, Transient: Equat
                 zombies.insert(uuid)
             }
             else {
-
                 listener.updateState(stateHolder)
             }
         }
