@@ -111,6 +111,21 @@ public typealias MyAppState = AppState<MyPersistent, MyTransient>
 public typealias MyAppUIStateManager = UIStateManager<MyPersistent, MyTransient>
 ```
 
+### Enabling Persistence
+
+To enable automatic persistence of your app's state across app launches, provide a `persistenceKey` when initializing the `UIStateManager`. This key is used to store and retrieve the persistent state from `UserDefaults`.
+
+```swift
+let stateManager = await MyAppUIStateManager(
+    defaultState: { @Sendable in
+        MyAppState(t: MyTransient(), p: MyPersistent())
+    },
+    persistenceKey: "myAppState"  // Enables persistence with this key
+)
+```
+
+- **persistenceKey**: A unique string identifier for storing your app's persistent state. If provided, the state manager will automatically save and restore persistent state. If omitted, persistence is disabled and state resets on each app launch.
+
 ### Handling Events
 
 Create an enum for events that implements `AppEvent`. Define cases for user actions and system responses. Specify which events should persist and which are UI events.
@@ -315,7 +330,8 @@ struct MyApp: App {
         let stateManager = await MyAppUIStateManager(
             defaultState: { @Sendable in
                 MyAppState(t: MyTransient(), p: MyPersistent())
-            }
+            },
+            persistenceKey: "myAppState"  // Optional: enables state persistence
         )
         await stateManager.addReducer(
             AnyReducer<MyAppState>(MyReducer())
