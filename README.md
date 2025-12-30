@@ -10,6 +10,15 @@ WAVE is inspired by MVI/Elm/Redux patterns but focuses on **clarity, separation 
 
 ---
 
+## Usage of the package
+
+Add as a dependency:
+```
+.package(url: "https://github.com/p3d-dev/WAVE.git", .upToNextMajor(from: "1.0.0")),
+```
+
+---
+
 ## 🏃 Running the Demo
 
 To run the included demo app, use:
@@ -64,7 +73,7 @@ Pure views import only `WaveViews`; app logic imports `WaveState` (which re-expo
 - **Explicit Actions** handle external side-effects safely  
 - **Presentation layers stay pure** (no domain logic leaks)  
 - **Events drive everything** — no hidden state magic
-- **Avoidance of SwiftUI hazzles** - no mix up of views and states
+- **Avoidance of SwiftUI hassles** - no mix-up of views and states
 - **Fast, atomic reducers** run off the main thread for performance
 - **Async effects** manage long-running tasks and feedback via events
 - **Views and logic are independently testable** — views can be tested without business logic, and logic without UI concerns
@@ -74,7 +83,7 @@ WAVE helps build systems that are:
 - simpler to test
 - naturally scalable
 - friendly to FP or OOP
-- uses macros to avoid boiler plate code.
+- uses macros to avoid boilerplate code.
 
 ---
 
@@ -186,7 +195,7 @@ struct MyReducer: EventReducer {
 
 ### State Objects and Forwarders
 
-The definition of MyStateObject belongs to a view definition, because a view needs it. The Listener belongs to app/app state code, which forwards from state (single truth) to stateobject
+The definition of MyStateObject belongs to a view definition, because a view needs it. The Listener belongs to app/app state code, which forwards from state (single truth) to StateObject
 
 Use `@StateForwarder` macro to automatically sync app state with SwiftUI `ObservableObject`s. Define mappings from app state key paths to object properties.
 
@@ -347,7 +356,7 @@ struct MyApp: App {
         WindowGroup {
             Group {
                 if let stateManager {
-                    MyView(stateObject: MyStateObject())
+                    MyLayoutView()
                         .environment(
                             \.appDispatch,
                             { @Sendable event in stateManager.dispatch(event) }
