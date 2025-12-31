@@ -1,6 +1,7 @@
 import WaveDemo
 import WaveState
 import WaveViews
+import WaveEventLogger
 
 /// Replace 'AppStateObjectFactory' with your app's factory name.
 /// This factory creates StateObjects and sets up the forwarding relationship with the state manager.

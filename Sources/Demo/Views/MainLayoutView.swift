@@ -1,6 +1,7 @@
 import SwiftUI
 import WaveState
 import WaveViews
+import WaveEventLogger
 
 /// This demonstrates how to compose different features in a single view.
 /// Replace 'MainLayoutView' with your app's main layout component.

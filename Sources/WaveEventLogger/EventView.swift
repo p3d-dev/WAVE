@@ -4,9 +4,9 @@ import WaveViews
 
 /// StateObject for displaying logged events.
 public final class EventStateObject: ObservableObject {
-    @Published public var events: [EventLoggingEntry]
+    @Published public var events: [EventEntry]
 
-    public init(events: [EventLoggingEntry] = []) {
+    public init(events: [EventEntry] = []) {
         self.events = events
         print("EventStateObject created")
     }

@@ -1,6 +1,7 @@
 import SwiftUI
 import WaveState
 import WaveViews
+import WaveEventLogger
 
 public typealias AppStateAlias = AppState<ExamplePersistent, ExampleTransient>
 public typealias AppUIStateManager = UIStateManager<ExamplePersistent, ExampleTransient>

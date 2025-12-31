@@ -16,6 +16,7 @@ let package = Package(
         .library(name: "WaveMacros", targets: ["WaveMacros"]),
         .library(name: "WaveViews", targets: ["WaveViews"]),
         .library(name: "WaveState", targets: ["WaveState"]),
+        .library(name: "WaveEventLogger", targets: ["WaveEventLogger"]),
         .library(name: "WaveDemo", targets: ["WaveDemo"]),
         .executable(name: "Demo", targets: ["Demo"]),
     ],
@@ -55,6 +56,11 @@ let package = Package(
             ],
             path: "Sources/WaveState"
         ),
+        .target(
+            name: "WaveEventLogger",
+            dependencies: ["WaveState", "WaveViews"],
+            path: "Sources/WaveEventLogger"
+        ),
         .testTarget(
             name: "WaveMacrosTests",
             dependencies: [
@@ -73,7 +79,7 @@ let package = Package(
         ),
         .target(
             name: "WaveDemo",
-            dependencies: ["WaveState", "WaveMacros"],
+            dependencies: ["WaveState", "WaveMacros", "WaveEventLogger"],
             path: "Sources/Demo",
             exclude: ["App"]
         ),

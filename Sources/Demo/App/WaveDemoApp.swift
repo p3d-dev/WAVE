@@ -2,6 +2,7 @@ import SwiftUI
 import WaveDemo
 import WaveState
 import WaveViews
+import WaveEventLogger
 
 #if os(macOS)
     import AppKit
@@ -58,10 +59,10 @@ struct AppContentView: View {
 
         // PITFALL: Forgetting to set up effects processor can lead to missing side effects
         // (e.g., analytics, network calls, persistence). Always call setEffects even if empty.
-        let effectsProcessor = EffectsProcessor(stateManager: stateManager)
+        let effectsProcessor = EventEffectsProcessor<ExamplePersistent, ExampleTransient>(stateManager: stateManager)
 
         await stateManager.setEffects { [effectsProcessor] event, state in
-            await effectsProcessor.process(event: event, state: state)
+            await effectsProcessor.process(event: event, events: state.t.eventLogging.events)
         }
 
         return stateManager

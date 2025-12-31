@@ -23,23 +23,6 @@ public class EffectsProcessor {
             // No side effects for example events currently
         }
 
-        // Handle replay
-        if let eventLoggingEvent = event as? EventLoggingEvent, eventLoggingEvent == .replay {
-            await handleReplay(state: state)
-        }
-
         // Future: Add more effects here, e.g., analytics, network calls
-    }
-
-    private func handleReplay(state: AppStateAlias) async {
-        guard let stateManager = self.stateManager else { return }
-        let eventsToReplay = state.t.eventLogging.events.map { $0.event }
-        Task.detached {
-            await stateManager.dispatch(EventLoggingEvent.clear)
-            for event in eventsToReplay {
-                try? await Task.sleep(nanoseconds: UInt64(0.5 * 1_000_000_000))
-                await stateManager.dispatch(event)
-            }
-        }
     }
 }

@@ -2,6 +2,7 @@ import SwiftUI
 import WaveMacros
 import WaveState
 import WaveViews
+import WaveEventLogger
 
 /// Forwarder for EventStateObject to sync event logging state.
 @StateForwarder(

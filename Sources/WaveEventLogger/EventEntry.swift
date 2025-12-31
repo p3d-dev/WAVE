@@ -2,7 +2,7 @@ import SwiftUI
 import WaveState
 
 /// Immutable entry describing a dispatched event for debugging purposes.
-public struct EventLoggingEntry: Equatable, Sendable, Identifiable {
+public struct EventEntry: Equatable, Sendable, Identifiable {
     public var id: UInt64 {
         self.timestamp
     }
@@ -20,7 +20,7 @@ public struct EventLoggingEntry: Equatable, Sendable, Identifiable {
     /// Indicates whether the event triggered persistence.
     public let persist: Bool
 
-    public static func == (lhs: EventLoggingEntry, rhs: EventLoggingEntry) -> Bool {
+    public static func == (lhs: EventEntry, rhs: EventEntry) -> Bool {
         lhs.timestamp == rhs.timestamp
             && lhs.typeName == rhs.typeName
             && lhs.description == rhs.description
