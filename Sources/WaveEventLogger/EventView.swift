@@ -50,8 +50,8 @@ public struct EventView: View {
                     }
                     .padding(.horizontal)
                 }
-                .onChange(of: stateObject.events) {
-                    if let last = stateObject.events.last {
+                .onReceive(stateObject.$events) { events in
+                    if let last = events.last {
                         proxy.scrollTo(last.id, anchor: .bottom)
                     }
                 }
