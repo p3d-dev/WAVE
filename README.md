@@ -116,7 +116,7 @@ public struct MyTransient: Equatable, Sendable {
 Then, define your app state by combining them. **Note: These typealias names must be used exactly as shown, as they are hardcoded in the macros.**
 
 ```swift
-public typealias AppState = AppState<MyPersistent, MyTransient>
+public typealias AppStateAlias = AppState<MyPersistent, MyTransient>
 public typealias AppStateHolder = StateHolder<MyPersistent, MyTransient>
 public typealias AppUIStateManager = UIStateManager<MyPersistent, MyTransient>
 ```
@@ -376,4 +376,3 @@ struct MyApp: App {
     }
 }
 ```
-
