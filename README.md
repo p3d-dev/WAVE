@@ -57,12 +57,13 @@ Ensure your code adheres to the style guidelines defined in `.swift-format` befo
 
 ## 📦 Module Structure
 
-WAVE is split into two modules for optimal separation of concerns:
+WAVE is split into three modules for optimal separation of concerns:
 
 - **WaveViews**: Minimal utilities for pure views. Provides environment keys for dispatching events and creating SwiftUI bindings. Views remain stateless and event-agnostic by design.
 - **WaveState**: Full state management engine, including reducers, persistence, effects, listeners, and event protocols. Import alongside `WaveMacros` for ViewModel generation.
+- **WaveEventLogger**: Optional module for event logging and replay functionality. Provides logging of dispatched events, a UI view for inspecting logs, and replay capabilities for debugging.
 
-Pure views import only `WaveViews`; app logic imports `WaveState` (which re-exports `WaveViews` for convenience).
+Pure views import only `WaveViews`; app logic imports `WaveState` (which re-exports `WaveViews` for convenience). Event logging is opt-in via `WaveEventLogger`.
 
 ---
 
@@ -155,17 +156,90 @@ public enum MyEvent: AppEvent, Codable, Equatable {
         switch self {
         case .incrementCounter, .decrementCounter, .setCounter:
             return true
-        }
-    }
-
-    public var isUIEvent: Bool {
-        switch self {
-        case .incrementCounter, .decrementCounter, .setCounter:
-            return true
-        }
     }
 }
 ```
+
+## 📋 Event Logging (Optional)
+
+WAVE includes an optional `WaveEventLogger` module for debugging and testing. It logs all dispatched events with metadata (timestamps, types, UI/BG origin, persistence flags) and provides a UI view for inspection. Logged events can be replayed sequentially for debugging state transitions.
+
+### Integrating Event Logging
+
+1. **Add to Dependencies**: Include `WaveEventLogger` in your package dependencies.
+
+2. **Update App State**: Add `EventLoggingState` to your transient state:
+
+   ```swift
+   import WaveEventLogger
+
+   public struct MyTransient: Equatable, Sendable {
+       public var eventLogging: EventLoggingState
+
+       public init() {
+           eventLogging = EventLoggingState()
+       }
+   }
+   ```
+
+3. **Register Reducer**: Add the event logging reducer to your state manager:
+
+   ```swift
+   await stateManager.addReducer(
+       AnyReducer<AppStateAlias>(
+           EventLoggingAppReducer<AppStateAlias>(keyPath: \.t.eventLogging)
+       )
+   )
+   ```
+
+4. **Define Forwarder**: Create a forwarder in your app state code to sync logged events with the UI view. This must be defined in your app because it references your specific `AppStateAlias` type:
+
+   ```swift
+   import WaveMacros
+   import WaveEventLogger
+
+   @StateForwarder(
+       for: EventStateObject.self,
+       mapping: [
+           (\AppStateAlias.t.eventLogging.events, \EventStateObject.events)
+       ]
+   )
+   public final class EventLoggingForwarder: StateListener {}
+   ```
+
+5. **Configure Effects**: Use `EventEffectsProcessor` to handle replay events:
+
+   ```swift
+   let eventEffectsProcessor = EventEffectsProcessor<AppStateAlias.Persistent, AppStateAlias.Transient>(
+       stateManager: stateManager
+   )
+
+   await stateManager.setEffects { [eventEffectsProcessor] event, state in
+       await eventEffectsProcessor.process(event: event, events: state.t.eventLogging.events)
+   }
+   ```
+
+6. **Add to UI**: Include `EventView` in your app layout:
+
+   ```swift
+   import WaveEventLogger
+
+   // In your object factory
+   func generateStateForwarder<T>(type: T.Type) -> (any StateListener)? {
+       // ... existing cases
+       if T.self == EventStateObject.self {
+           return EventLoggingForwarder(stateManager: stateManager)
+       }
+       return nil
+   }
+
+   // In your layout view
+   EventView(stateObject: ev)  // Where ev is the EventStateObject from objectFactory
+   ```
+
+### Why App-Specific Forwarder?
+
+The forwarder must be defined in your app code because it uses key paths specific to your `AppState` type (e.g., `\AppStateAlias.t.eventLogging.events`). This keeps the `WaveEventLogger` module generic and reusable across different app states.
 
 ### Creating a Reducer
 
