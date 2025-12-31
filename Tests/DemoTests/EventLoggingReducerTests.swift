@@ -1,6 +1,7 @@
 import Testing
 import WaveState
 import WaveViews
+import WaveEventLogger
 
 @testable import WaveDemo
 

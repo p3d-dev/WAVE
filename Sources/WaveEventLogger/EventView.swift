@@ -43,37 +43,10 @@ public struct EventView: View {
             ScrollViewReader { proxy in
                 ScrollView {
                     VStack(alignment: .leading, spacing: 4) {
-                        ForEach(stateObject.events) { entry in
-                            HStack(alignment: .top) {
-                                VStack(alignment: .leading) {
-                                    let eventName = String(
-                                        entry.typeName.split(separator: ".").last ?? "")
-                                    Text("\(eventName): \(entry.description)")
-                                        .font(.subheadline)
-                                        .foregroundColor(.blue)
-                                }
-                                Spacer()
-                                VStack(alignment: .trailing) {
-                                    Text(entry.isUIEvent ? "UI" : "BG")
-                                        .font(.caption)
-                                        .padding(2)
-                                        .background(
-                                            entry.isUIEvent
-                                                ? Color.green.opacity(0.2) : Color.gray.opacity(0.2)
-                                        )
-                                        .cornerRadius(4)
-                                    if entry.persist {
-                                        Text("Persist")
-                                            .font(.caption2)
-                                            .foregroundColor(.orange)
-                                    }
-                                }
-                            }
-                            .padding(6)
-                            .background(Color.gray.opacity(0.05))
-                            .cornerRadius(4)
-                            .id(entry.id)
-                        }
+                         ForEach(stateObject.events) { entry in
+                             EventRow(entry: entry)
+                                 .id(entry.id)
+                         }
                     }
                     .padding(.horizontal)
                 }
