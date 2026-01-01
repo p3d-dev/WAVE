@@ -49,7 +49,6 @@ func testStateForwarderMacroExpansionFullText() throws {
 
             public init(stateManager: AppUIStateManager) {
                 self.stateManager = stateManager
-                stateManager.addListener(self)
             }
 
             public func getStateObject() -> StateObject {
@@ -59,6 +58,7 @@ func testStateForwarderMacroExpansionFullText() throws {
                         counter2: state[keyPath: \\TestState.counter2]
                         )
                 receiver = so
+                stateManager.addListener(self)
                 return so
             }
 

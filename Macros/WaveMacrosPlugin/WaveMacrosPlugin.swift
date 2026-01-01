@@ -143,7 +143,6 @@ public struct StateForwarderMacro: MemberMacro {
             """
             public init(stateManager: AppUIStateManager) {
                 self.stateManager = stateManager
-                stateManager.addListener(self)
             }
             """
         )
@@ -166,6 +165,7 @@ public struct StateForwarderMacro: MemberMacro {
                 let so = \(stateObjectType)(
             \(initializerArguments)            )
                 receiver = so
+                stateManager.addListener(self)
                 return so
             }
             """
