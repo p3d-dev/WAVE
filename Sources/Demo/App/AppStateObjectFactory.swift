@@ -2,6 +2,7 @@ import WaveDemo
 import WaveState
 import WaveViews
 import WaveEventLogger
+import SwiftUI
 
 /// Replace 'AppStateObjectFactory' with your app's factory name.
 /// This factory creates StateObjects and sets up the forwarding relationship with the state manager.
@@ -13,30 +14,16 @@ final class AppStateObjectFactory: StateObjectFactory {
         self.stateManager = stateManager
     }
 
-    /// PITFALL: Missing listener registrations - Ensure all StateObject types have a case here.
-    /// PITFALL: Missing StateForwarder definition - Each StateObject must have a corresponding @StateForwarder
-    /// to generate the forwarder class. Without it, state won't sync to the UI.
-    /// Each forwarder automatically syncs app state with the StateObject via listener registration.
-    @MainActor
-    func generateStateForwarder<T>(type: T.Type) -> (any StateListener)? {
-        if T.self == ExampleStateObject.self {
-            return ExampleForwarder(stateManager: stateManager)
-        }
-        if T.self == EventStateObject.self {
-            return EventForwarder(stateManager: stateManager)
-        }
-        return nil
-    }
-
     /// PITFALL: This creates a StateObject and registers it as a listener with the state manager.
     /// The StateObject will automatically stay in sync with app state changes.
     /// Never create StateObjects manually - always use this factory method for proper listener setup.
     @MainActor
-    func makeStateObject<T>() -> T? {
-        if let forwarder = generateStateForwarder(type: T.self) {
-            // Get the StateObject from the forwarder (created by the macro)
-            let so = forwarder.getStateObject()
-            return so as? T
+    func makeStateObject<T>() -> StateObject<T>? {
+        if T.self == ExampleStateObject.self {
+            return ExampleForwarder(stateManager: stateManager).getStateObject() as? StateObject<T>
+        }
+        if T.self == EventStateObject.self {
+            return EventForwarder(stateManager: stateManager).getStateObject() as? StateObject<T>
         }
         return nil
     }

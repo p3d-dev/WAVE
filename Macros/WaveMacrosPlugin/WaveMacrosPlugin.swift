@@ -160,13 +160,13 @@ public struct StateForwarderMacro: MemberMacro {
         let initializerArguments = parameterLines.isEmpty ? "" : "\(parameterLines)\n"
 
         let body = """
-            public func getStateObject() -> \(stateObjectType) {
+            public func getStateObject() -> StateObject<\(stateObjectType)> {
                 let state = stateManager.getState()
                 let so = \(stateObjectType)(
             \(initializerArguments)            )
                 receiver = so
                 stateManager.addListener(self)
-                return so
+                return StateObject(wrappedValue: so)
             }
             """
         return DeclSyntax(stringLiteral: body)

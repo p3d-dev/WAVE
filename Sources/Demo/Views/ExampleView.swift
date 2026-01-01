@@ -35,8 +35,8 @@ public struct ExampleView: View {
     @StateObject var stateObject: ExampleStateObject
     @Environment(\.appDispatch) private var appDispatch: AppDispatch
 
-    public init(stateObject: ExampleStateObject) {
-        self._stateObject = StateObject(wrappedValue: stateObject)
+    public init(stateObject: StateObject<ExampleStateObject>) {
+        self._stateObject = stateObject
     }
 
     public var body: some View {

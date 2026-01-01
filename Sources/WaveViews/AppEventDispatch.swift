@@ -38,7 +38,7 @@ extension EnvironmentValues {
 /// Views access the factory via @Environment(\.objectFactory)
 public protocol StateObjectFactory: Sendable {
     @MainActor
-    func makeStateObject<T>() -> T?
+    func makeStateObject<T>() -> StateObject<T>?
 }
 
 /// Environment key for injecting the StateObject factory.

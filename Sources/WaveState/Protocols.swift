@@ -114,7 +114,7 @@ public struct EmptyTransient: Equatable, Sendable {
 @MainActor
 public protocol StateListener: AnyObject, Sendable {
     /// The type of object this listener manages.
-    associatedtype T
+    associatedtype T: ObservableObject
 
     /// Indicates if this listener has been deallocated (zombie state).
     /// Used by UIStateManager to clean up weak references.
@@ -125,5 +125,5 @@ public protocol StateListener: AnyObject, Sendable {
     func updateState(_ stateHolder: AnyObject)
 
     /// Returns the object managed by this listener.
-    func getStateObject() -> T
+    func getStateObject() -> StateObject<T>
 }

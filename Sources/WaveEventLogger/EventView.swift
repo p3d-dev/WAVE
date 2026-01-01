@@ -20,8 +20,8 @@ public struct EventView: View {
     @StateObject var stateObject: EventStateObject
     @Environment(\.appDispatch) private var appDispatch: AppDispatch
 
-    public init(stateObject: EventStateObject) {
-        self._stateObject = StateObject(wrappedValue: stateObject)
+    public init(stateObject: StateObject<EventStateObject> ) {
+        self._stateObject = stateObject
     }
 
     public var body: some View {

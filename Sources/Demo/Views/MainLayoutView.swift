@@ -1,7 +1,7 @@
 import SwiftUI
+import WaveEventLogger
 import WaveState
 import WaveViews
-import WaveEventLogger
 
 /// This demonstrates how to compose different features in a single view.
 /// Replace 'MainLayoutView' with your app's main layout component.
@@ -9,16 +9,15 @@ import WaveEventLogger
 public struct MainLayoutView: View {
     @Environment(\.objectFactory) private var objectFactory
 
-    public init() {
-    }
+    public init() {}
 
     public var body: some View {
         // PITFALL: Missing listener registrations - Always use objectFactory.makeStateObject() to create StateObjects.
         // This ensures the StateObject is registered as a listener and stays in sync with app state.
         // This pattern allows dependency injection and proper lifecycle management
         if let objectFactory,
-            let es: ExampleStateObject = objectFactory.makeStateObject(),
-            let ev: EventStateObject = objectFactory.makeStateObject()
+            let es: StateObject<ExampleStateObject> = objectFactory.makeStateObject(),
+            let ev: StateObject<EventStateObject> = objectFactory.makeStateObject()
         {
             VStack(spacing: 0) {
                 HStack(spacing: 0) {

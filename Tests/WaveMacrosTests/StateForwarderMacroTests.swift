@@ -51,7 +51,7 @@ func testStateForwarderMacroExpansionFullText() throws {
                 self.stateManager = stateManager
             }
 
-            public func getStateObject() -> StateObject {
+            public func getStateObject() -> StateObject<StateObject> {
                 let state = stateManager.getState()
                 let so = StateObject(
                         counter: state[keyPath: \\TestState.counter],
@@ -59,7 +59,7 @@ func testStateForwarderMacroExpansionFullText() throws {
                         )
                 receiver = so
                 stateManager.addListener(self)
-                return so
+                return StateObject(wrappedValue: so)
             }
 
 
