@@ -14,7 +14,7 @@ WAVE is inspired by MVI/Elm/Redux patterns but focuses on **clarity, separation 
 
 Add as a dependency:
 ```
-.package(url: "https://github.com/p3d-dev/WAVE.git", .upToNextMajor(from: "1.0.0")),
+.package(url: "https://github.com/p3d-dev/WAVE.git", .upToNextMajor(from: "1.2.0")),
 ```
 
 ---
@@ -225,16 +225,18 @@ WAVE includes an optional `WaveEventLogger` module for debugging and testing. It
    import WaveEventLogger
 
    // In your object factory
-   func generateStateForwarder<T>(type: T.Type) -> (any StateListener)? {
+   func makeStateObject<T>() -> StateObject<T>? {
        // ... existing cases
        if T.self == EventStateObject.self {
-           return EventLoggingForwarder(stateManager: stateManager)
+           return EventLoggingForwarder(stateManager: stateManager).getStateObject() as? StateObject<T>
        }
        return nil
    }
 
    // In your layout view
-   EventView(stateObject: ev)  // Where ev is the EventStateObject from objectFactory
+   if let ev: StateObject<EventStateObject> = objectFactory?.makeStateObject() {
+       EventView(stateObject: ev)
+   }
    ```
 
 ### Why App-Specific Forwarder?
@@ -336,8 +338,8 @@ public struct MyView: View {
     @StateObject var stateObject: MyStateObject
     @Environment(\.appDispatch) private var appDispatch: AppDispatch
 
-    public init(stateObject: MyStateObject) {
-        self._stateObject = StateObject(wrappedValue: stateObject)
+    public init(stateObject: StateObject<MyStateObject>) {
+        self._stateObject = stateObject
     }
 
     public var body: some View {
@@ -368,7 +370,7 @@ public struct MyLayoutView: View {
     @Environment(\.objectFactory) private var objectFactory
 
     public var body: some View {
-        if let stateObject: MyStateObject = objectFactory?.makeStateObject() {
+        if let stateObject: StateObject<MyStateObject> = objectFactory?.makeStateObject() {
             MyView(stateObject: stateObject)
         } else {
             Text("Loading...")
