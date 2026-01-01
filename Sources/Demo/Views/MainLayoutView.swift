@@ -28,13 +28,6 @@ public struct MainLayoutView: View {
                         .frame(width: 300)
                         .frame(maxHeight: .infinity)
                 }
-
-                HStack {
-                    Spacer()
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 4)
-                .background(Color.gray.opacity(0.05))
             }
             .frame(minWidth: 800, minHeight: 600)
             .clipped()
