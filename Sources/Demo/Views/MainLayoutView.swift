@@ -7,12 +7,9 @@ import WaveEventLogger
 /// Replace 'MainLayoutView' with your app's main layout component.
 /// Shows pattern for using objectFactory to create StateObjects for features.
 public struct MainLayoutView: View {
-    private let stateManager: AppUIStateManager
-
     @Environment(\.objectFactory) private var objectFactory
 
-    public init(stateManager: AppUIStateManager) {
-        self.stateManager = stateManager
+    public init() {
     }
 
     public var body: some View {

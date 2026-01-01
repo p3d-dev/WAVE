@@ -71,7 +71,7 @@ struct AppContentView: View {
     var body: some View {
         Group {
             if let stateManager {
-                MainLayoutView(stateManager: stateManager)
+                MainLayoutView()
                     // This provides a closure that views can use to dispatch events to the state manager
                     // Views access this via @Environment(\.appDispatch) and call it to trigger state changes
                     .environment(
