@@ -11,6 +11,20 @@ public protocol AppEvent: Sendable, Codable {
     var isUIEvent: Bool { get }
 }
 
+/// Event queued with timestamp metadata for processing.
+/// Used by the state manager to track event timing and ordering.
+public struct EnqueuedEvent: Sendable {
+    /// The event being queued.
+    public let event: any AppEvent
+    /// Timestamp when the event was queued (nanoseconds since boot).
+    public let enqueuedAt: UInt64
+
+    public init(event: any AppEvent) {
+        self.event = event
+        self.enqueuedAt = DispatchTime.now().uptimeNanoseconds
+    }
+}
+
 /// Type alias for the dispatch function used throughout the app.
 /// This is the function signature that views use to send events to the state manager.
 /// Views access this via @Environment(\.appDispatch) and call it to dispatch events.

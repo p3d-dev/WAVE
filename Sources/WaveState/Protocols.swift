@@ -43,16 +43,16 @@ public protocol EventReducer {
     /// Reduces the state based on the given queued event.
     /// - Parameters:
     ///   - state: The current state.
-    ///   - queuedEvent: The queued event (with timestamp metadata) to process.
+    ///   - EnqueuedEvent: The queued event (with timestamp metadata) to process.
     /// - Returns: The new state after applying the event.
-    func reduce(state: State, queuedEvent: QueuedEvent) -> State
+    func reduce(state: State, EnqueuedEvent: EnqueuedEvent) -> State
 }
 
 /// Type-erased wrapper for EventReducer to enable heterogeneous collections.
 /// Allows storing different reducer types in the same collection.
 public struct AnyReducer<S>: EventReducer {
     /// The underlying reduce function.
-    private let _reduce: (S, QueuedEvent) -> S
+    private let _reduce: (S, EnqueuedEvent) -> S
 
     /// Initializes with a concrete reducer implementation.
     public init<R: EventReducer>(_ reducer: R) where R.State == S {
@@ -60,23 +60,8 @@ public struct AnyReducer<S>: EventReducer {
     }
 
     /// Reduces the state using the wrapped reducer.
-    public func reduce(state: S, queuedEvent: QueuedEvent) -> S {
-        _reduce(state, queuedEvent)
-    }
-}
-
-/// Event queued with timestamp metadata for processing.
-/// Used by the state manager to track event timing and ordering.
-public struct QueuedEvent: Sendable {
-    /// The event being queued.
-    public let event: any AppEvent
-    /// Timestamp when the event was queued (nanoseconds since boot).
-    public let timestamp: UInt64
-
-    /// Initializes a queued event with the given event and current timestamp.
-    public init(event: any AppEvent) {
-        self.event = event
-        self.timestamp = DispatchTime.now().uptimeNanoseconds
+    public func reduce(state: S, EnqueuedEvent: EnqueuedEvent) -> S {
+        _reduce(state, EnqueuedEvent)
     }
 }
 

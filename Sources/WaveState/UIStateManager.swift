@@ -37,7 +37,7 @@ where Persistent: PersistentState, Transient: Equatable & Sendable {
     /// Optional filter to control which events are processed
     public var dispatchFilter: ((any AppEvent) async -> Bool)?
     /// Continuation for the event processing stream
-    private var continuation: AsyncStream<QueuedEvent>.Continuation?
+    private var continuation: AsyncStream<EnqueuedEvent>.Continuation?
 
     /// Number of events dispatched (for testing/debugging)
     public private(set) var eventsDispatched: Int = 0
@@ -93,8 +93,8 @@ where Persistent: PersistentState, Transient: Equatable & Sendable {
 
         // Ensure listeners/effects receive the initial state through normal event flow
         let initialEvent = StateRestoreEvent(restoredState: initialState.p)
-        let stream = AsyncStream<QueuedEvent> { continuation in
-            continuation.yield(QueuedEvent(event: initialEvent))
+        let stream = AsyncStream<EnqueuedEvent> { continuation in
+            continuation.yield(EnqueuedEvent(event: initialEvent))
             self.continuation = continuation
         }
         var iterator = stream.makeAsyncIterator()
@@ -140,14 +140,14 @@ where Persistent: PersistentState, Transient: Equatable & Sendable {
     }
 
     /// Processes events from the async stream
-    private func process(stream: AsyncStream<QueuedEvent>) async {
+    private func process(stream: AsyncStream<EnqueuedEvent>) async {
         for await event in stream {
             await process(event: event)
         }
     }
 
     /// Processes a single event, updating state and running effects
-    private func process(event: QueuedEvent) async {
+    private func process(event: EnqueuedEvent) async {
 
         let previousState = state
         var resultingState = previousState
@@ -160,7 +160,7 @@ where Persistent: PersistentState, Transient: Equatable & Sendable {
         }
         else {
             for reducer in reducers {
-                resultingState = reducer.reduce(state: resultingState, queuedEvent: event)
+                resultingState = reducer.reduce(state: resultingState, EnqueuedEvent: event)
             }
         }
         stateBox.store(StateBox(state: resultingState), ordering: .relaxed)
@@ -188,7 +188,7 @@ where Persistent: PersistentState, Transient: Equatable & Sendable {
         }
         eventsDispatched += 1
 
-        self.continuation?.yield(QueuedEvent(event: event))
+        self.continuation?.yield(EnqueuedEvent(event: event))
     }
 
     nonisolated public func dispatch(_ event: any AppEvent, withoutFilter: Bool = false) {

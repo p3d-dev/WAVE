@@ -20,18 +20,18 @@ func testEventLoggingReducerRetainsEntries() {
 
     loggingState = reducer.reduce(
         state: loggingState,
-        queuedEvent: QueuedEvent(event: LoggingTestEvent.alpha))
+        EnqueuedEvent: EnqueuedEvent(event: LoggingTestEvent.alpha))
     #expect(loggingState.events.count == 1)
     #expect(loggingState.events.last?.typeName.contains("LoggingTestEvent") == true)
 
     loggingState = reducer.reduce(
         state: loggingState,
-        queuedEvent: QueuedEvent(event: LoggingTestEvent.beta))
+        EnqueuedEvent: EnqueuedEvent(event: LoggingTestEvent.beta))
     #expect(loggingState.events.count == 2)
 
     loggingState = reducer.reduce(
         state: loggingState,
-        queuedEvent: QueuedEvent(event: LoggingTestEvent.alpha))
+        EnqueuedEvent: EnqueuedEvent(event: LoggingTestEvent.alpha))
     #expect(loggingState.events.count == 2)
     #expect(loggingState.events.first?.description.contains("beta") == true)
     #expect(loggingState.events.last?.description.contains("alpha") == true)

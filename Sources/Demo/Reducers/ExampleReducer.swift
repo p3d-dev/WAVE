@@ -7,9 +7,9 @@ import WaveState
 public struct ExampleReducer: EventReducer {
     public init() {}
 
-    public func reduce(state: AppStateAlias, queuedEvent: QueuedEvent) -> AppStateAlias {
+    public func reduce(state: AppStateAlias, EnqueuedEvent: EnqueuedEvent) -> AppStateAlias {
         var newState = state
-        let event = queuedEvent.event
+        let event = EnqueuedEvent.event
         if let exampleEvent = event as? ExampleEvent {
             switch exampleEvent {
                 case .onAppear:

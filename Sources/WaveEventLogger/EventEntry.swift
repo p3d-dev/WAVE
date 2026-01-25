@@ -29,14 +29,14 @@ public struct EventEntry: Equatable, Sendable, Identifiable {
     }
 
     /// Creates an entry based on the provided event.
-    /// - Parameter queuedEvent: The queued event being logged.
-    public init(queuedEvent: QueuedEvent) {
-        timestamp = queuedEvent.timestamp
-        event = queuedEvent.event
-        typeName = String(reflecting: type(of: queuedEvent.event))
-        description = String(describing: queuedEvent.event)
-        isUIEvent = queuedEvent.event.isUIEvent
-        persist = queuedEvent.event.persist
+    /// - Parameter EnqueuedEvent: The queued event being logged.
+    public init(EnqueuedEvent: EnqueuedEvent) {
+        timestamp = EnqueuedEvent.enqueuedAt
+        event = EnqueuedEvent.event
+        typeName = String(reflecting: type(of: EnqueuedEvent.event))
+        description = String(describing: EnqueuedEvent.event)
+        isUIEvent = EnqueuedEvent.event.isUIEvent
+        persist = EnqueuedEvent.event.persist
     }
 
     /// Creates a custom entry, primarily for testing or tooling.
