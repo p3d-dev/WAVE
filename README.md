@@ -14,7 +14,7 @@ WAVE is inspired by MVI/Elm/Redux patterns but focuses on **clarity, separation 
 
 Add as a dependency:
 ```
-.package(url: "https://github.com/p3d-dev/WAVE.git", .upToNextMajor(from: "1.3.0")),
+.package(url: "https://github.com/p3d-dev/WAVE.git", .upToNextMajor(from: "1.4.0")),
 ```
 
 ---
@@ -251,7 +251,7 @@ Implement a reducer as a pure function that transforms state based on events. Re
 import WaveState
 
 struct MyReducer: EventReducer {
-    func reduce(state: AppState, EnqueuedEvent: EnqueuedEvent) -> AppState {
+    func reduce(state: AppState, enqueuedEvent: EnqueuedEvent) -> AppState {
         var newState = state
         let event = EnqueuedEvent.event
         if let myEvent = event as? MyEvent {

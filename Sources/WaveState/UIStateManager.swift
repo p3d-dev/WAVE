@@ -160,7 +160,7 @@ where Persistent: PersistentState, Transient: Equatable & Sendable {
         }
         else {
             for reducer in reducers {
-                resultingState = reducer.reduce(state: resultingState, EnqueuedEvent: event)
+                resultingState = reducer.reduce(state: resultingState, enqueuedEvent: event)
             }
         }
         stateBox.store(StateBox(state: resultingState), ordering: .relaxed)

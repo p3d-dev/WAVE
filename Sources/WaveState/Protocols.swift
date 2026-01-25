@@ -45,7 +45,7 @@ public protocol EventReducer {
     ///   - state: The current state.
     ///   - EnqueuedEvent: The queued event (with timestamp metadata) to process.
     /// - Returns: The new state after applying the event.
-    func reduce(state: State, EnqueuedEvent: EnqueuedEvent) -> State
+    func reduce(state: State, enqueuedEvent: EnqueuedEvent) -> State
 }
 
 /// Type-erased wrapper for EventReducer to enable heterogeneous collections.
@@ -60,8 +60,8 @@ public struct AnyReducer<S>: EventReducer {
     }
 
     /// Reduces the state using the wrapped reducer.
-    public func reduce(state: S, EnqueuedEvent: EnqueuedEvent) -> S {
-        _reduce(state, EnqueuedEvent)
+    public func reduce(state: S, enqueuedEvent: EnqueuedEvent) -> S {
+        _reduce(state, enqueuedEvent)
     }
 }
 

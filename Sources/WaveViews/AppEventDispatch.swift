@@ -13,7 +13,7 @@ public protocol AppEvent: Sendable, Codable {
 
 /// Event queued with timestamp metadata for processing.
 /// Used by the state manager to track event timing and ordering.
-public struct EnqueuedEvent: Sendable {
+public final class EnqueuedEvent: Sendable {
     /// The event being queued.
     public let event: any AppEvent
     /// Timestamp when the event was queued (nanoseconds since boot).

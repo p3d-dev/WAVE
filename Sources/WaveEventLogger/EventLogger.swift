@@ -44,15 +44,15 @@ public struct EventLoggingReducer {
     ///   - state: Current logging state.
     ///   - EnqueuedEvent: Event being processed.
     /// - Returns: Updated logging state with the new entry appended.
-    public func reduce(state: EventLoggingState, EnqueuedEvent: EnqueuedEvent) -> EventLoggingState {
-        if EnqueuedEvent.event is EventLoggingEvent {
-            if case .clear = EnqueuedEvent.event as! EventLoggingEvent {
+    public func reduce(state: EventLoggingState, enqueuedEvent: EnqueuedEvent) -> EventLoggingState {
+        if enqueuedEvent.event is EventLoggingEvent {
+            if case .clear = enqueuedEvent.event as! EventLoggingEvent {
                 return EventLoggingState(events: [])
             }
             return state
         }
         var newState = state
-        newState.events.append(EventEntry(EnqueuedEvent: EnqueuedEvent))
+        newState.events.append(EventEntry(enqueuedEvent: enqueuedEvent))
         let overflow = newState.events.count - maxEntries
         if overflow > 0 {
             newState.events.removeFirst(overflow)
@@ -78,11 +78,11 @@ public struct EventLoggingAppReducer<State>: EventReducer {
         self.reducer = reducer
     }
 
-    public func reduce(state: State, EnqueuedEvent: EnqueuedEvent) -> State {
+    public func reduce(state: State, enqueuedEvent: EnqueuedEvent) -> State {
         var newState = state
         let loggingState = reducer.reduce(
             state: newState[keyPath: keyPath],
-            EnqueuedEvent: EnqueuedEvent)
+            enqueuedEvent: enqueuedEvent)
         newState[keyPath: keyPath] = loggingState
         return newState
     }
